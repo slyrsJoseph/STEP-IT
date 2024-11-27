@@ -1,0 +1,95 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tooltips for Buttons</title>
+    <style>
+      body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f9f1e8;
+      }
+
+      .button {
+        position: relative;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        background-color: white;
+        border-radius: 5px;
+      }
+
+      .tooltip {
+        position: absolute;
+        background-color: #6a329f;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        white-space: nowrap;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .tooltip.top {
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 10px;
+      }
+
+      .tooltip.top::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: #6a329f transparent transparent transparent;
+      }
+
+      .tooltip.bottom {
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 10px;
+      }
+
+      .tooltip.bottom::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent #6a329f transparent;
+      }
+
+      .button:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="button">
+      Button 1
+      <div class="tooltip top">Tool tip 1</div>
+    </div>
+
+    <div class="button">
+      Button 2
+      <div class="tooltip top">Tool tip 2</div>
+    </div>
+    <script src="./js/javaHometask7.js"></script>
+  </body>
+</html>

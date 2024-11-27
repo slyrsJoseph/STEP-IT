@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Traffic light</title>
+  </head>
+  <style>
+    .traffic-light {
+      display: flex;
+    }
+    .traffic-light__container {
+      display: flex;
+      border: 1px solid black;
+      border-radius: 10px;
+      padding: 60px 60px 60px 60px;
+    }
+    .traffic-light__btn {
+      margin-left: 20px;
+    }
+    .traffic-light__red {
+      border-radius: 50%;
+      background-color: grey;
+      width: 40px;
+      height: 40px;
+    }
+    .traffic-light__orange {
+      border-radius: 50%;
+      background-color: grey;
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+    }
+    .traffic-light__green {
+      border-radius: 50%;
+      background-color: grey;
+      width: 40px;
+      height: 40px;
+      margin-left: 10px;
+    }
+  </style>
+  <body>
+    <div class="traffic-light">
+      <div class="traffic-light__container">
+        <div class="traffic-light__red"></div>
+        <div class="traffic-light__orange"></div>
+        <div class="traffic-light__green"></div>
+      </div>
+      <button class="traffic-light__btn">NEXT</button>
+    </div>
+    <script src="./js/javaHometask7.js"></script>
+  </body>
+</html>
