@@ -1,0 +1,39 @@
+.card {
+  background: blue;
+  padding: 20px;
+  border-radius: 15px;
+  width: 300px;
+  max-width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.cardContent h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.amount {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.cardHolder {
+  font-size: 12px;
+  margin-top: 10px;
+  opacity: 0.8;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cardDetails {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 15px;
+  opacity: 0.9;
+}
