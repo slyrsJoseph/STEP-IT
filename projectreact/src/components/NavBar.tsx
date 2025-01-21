@@ -46,7 +46,6 @@ const NavBar = () => {
             Dinner
           </NavLink>
         </li>
-        <div className={style["lock-icon"]}>🔒</div>
       </ul>
     </nav>
   );
