@@ -8,18 +8,18 @@ public class TransactionConfig : IEntityTypeConfiguration<Transaction>
     public void Configure(EntityTypeBuilder<Transaction> builder)
     {
         builder.HasKey(t => t.Id);
-        builder.Property(t => t.PaymentMethod).HasMaxLength(50);
-        builder.Property(t => t.Status).HasMaxLength(20);
-        builder.Property(t => t.CreatedAt).IsRequired();
 
         builder.HasOne(t => t.User)
-            .WithMany()
+            .WithMany(u => u.Transactions)
             .HasForeignKey(t => t.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict); // ✅ Убираем каскадное удаление
 
         builder.HasOne(t => t.Order)
-            .WithMany()
-            .HasForeignKey(t => t.OrderId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithOne(o => o.Transaction)
+            .HasForeignKey<Transaction>(t => t.OrderId)
+            .OnDelete(DeleteBehavior.Restrict); // ✅ Убираем каскадное удаление
+
+        builder.Property(t => t.PaymentMethod).IsRequired().HasMaxLength(50);
+        builder.Property(t => t.Status).IsRequired().HasMaxLength(50);
     }
 }

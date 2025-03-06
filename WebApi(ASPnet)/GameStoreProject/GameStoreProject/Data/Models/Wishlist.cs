@@ -11,5 +11,7 @@ public class Wishlist
     
   
     public int GameId { get; set; }
-    public Games Games { get; set; }
+   public Game Game { get; set; }
+   
+   // public ICollection<Game> Games { get; set; } = new List<Game>();
 }

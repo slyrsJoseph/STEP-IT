@@ -7,5 +7,5 @@ public class Developer
     public string Website { get; set; }
     public string Country { get; set; }
 
-    public ICollection<Games> Games { get; set; } = new List<Games>();
+    public ICollection<Game> Games { get; set; } = new List<Game>();
 }

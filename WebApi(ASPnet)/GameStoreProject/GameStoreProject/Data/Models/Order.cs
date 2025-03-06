@@ -9,4 +9,7 @@ public class Order
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+
+    // ❗ Добавляем связь с Transaction, чтобы EF Core корректно строил отношение 1:1
+    public Transaction Transaction { get; set; }
 }
