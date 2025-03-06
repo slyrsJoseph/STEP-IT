@@ -1,0 +1,7 @@
+C:\Users\JosephOne\RiderProjects\GameStoreProject\gamestoreproject\obj\Debug\net8.0\GameStoreProject.csproj.AssemblyReference.cache
+C:\Users\JosephOne\RiderProjects\GameStoreProject\gamestoreproject\obj\Debug\net8.0\GameStoreProject.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JosephOne\RiderProjects\GameStoreProject\gamestoreproject\obj\Debug\net8.0\GameStoreProject.AssemblyInfoInputs.cache
+C:\Users\JosephOne\RiderProjects\GameStoreProject\gamestoreproject\obj\Debug\net8.0\GameStoreProject.AssemblyInfo.cs
+C:\Users\JosephOne\RiderProjects\GameStoreProject\gamestoreproject\obj\Debug\net8.0\GameStoreProject.csproj.CoreCompileInputs.cache
+C:\Users\JosephOne\RiderProjects\GameStoreProject\gamestoreproject\obj\Debug\net8.0\GameStoreProject.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\JosephOne\RiderProjects\GameStoreProject\gamestoreproject\obj\Debug\net8.0\GameStoreProject.MvcApplicationPartsAssemblyInfo.cache
