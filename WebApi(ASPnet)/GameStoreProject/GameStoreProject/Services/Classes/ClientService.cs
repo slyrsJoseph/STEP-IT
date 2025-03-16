@@ -1,4 +1,4 @@
-using GameStoreProject.Services.Interfaces;
+/*using GameStoreProject.Services.Interfaces;
 using GameStoreProject.Data.Models;
 namespace GameStoreProject.Services.Classes;
 using AutoMapper;
@@ -77,4 +77,4 @@ public class ClientService : IClientService
     }
     
     
-}
+}*/
