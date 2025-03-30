@@ -1,0 +1,11 @@
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\bin\Debug\net9.0\LogAnalizerShared.deps.json
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\bin\Debug\net9.0\LogAnalizerShared.dll
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\bin\Debug\net9.0\LogAnalizerShared.pdb
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\obj\Debug\net9.0\LogAnalizerShared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\obj\Debug\net9.0\LogAnalizerShared.AssemblyInfoInputs.cache
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\obj\Debug\net9.0\LogAnalizerShared.AssemblyInfo.cs
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\obj\Debug\net9.0\LogAnalizerShared.csproj.CoreCompileInputs.cache
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\obj\Debug\net9.0\LogAnalizerShared.dll
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\obj\Debug\net9.0\refint\LogAnalizerShared.dll
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\obj\Debug\net9.0\LogAnalizerShared.pdb
+C:\Users\JosephOne\RiderProjects\LogAnalizerClient\LogAnalizerShared\obj\Debug\net9.0\ref\LogAnalizerShared.dll

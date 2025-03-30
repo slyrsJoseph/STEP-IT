@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "CRFKd9tjGG8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\JosephOne\\RiderProjects\\LogAnalizerClient\\LogAnalizerClient\\LogAnalizerClient.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\JosephOne\\.nuget\\packages\\system.net.http.json\\9.0.3\\system.net.http.json.9.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

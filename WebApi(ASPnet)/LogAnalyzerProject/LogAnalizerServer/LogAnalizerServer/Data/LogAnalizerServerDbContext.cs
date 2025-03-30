@@ -1,0 +1,48 @@
+using LogAnalizerServer.Models;
+
+namespace LogAnalizerServer.Data;
+using Microsoft.EntityFrameworkCore;
+
+
+public class LogAnalizerServerDbContext : DbContext
+{
+    public DbSet<AlarmLog> AlarmLogs { get; set; } = null!;
+    /*public DbSet<AlarmLog> CurrentWeekLogs { get; set; } = null!;
+    public DbSet<AlarmLog> PreviousWeekLogs { get; set; } = null!;*/
+    public DbSet<ComparisonResult> ComparisonResults { get; set; } = null!;
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AlarmLog>(entity =>
+        {
+            entity.HasKey(e => e.Id); 
+
+            entity.Property(e => e.TimeWhenLogged).IsRequired();
+            entity.Property(e => e.LocalZoneTime).IsRequired();
+
+            entity.Property(e => e.SequenceNumber).IsRequired();
+            entity.Property(e => e.AlarmId).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.AlarmClass).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Resource).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.LoggedBy).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Reference).HasMaxLength(200);
+
+            entity.Property(e => e.PrevState).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.LogAction).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.FinalState).IsRequired().HasMaxLength(50);
+
+            entity.Property(e => e.AlarmMessage).IsRequired().HasMaxLength(500);
+            entity.Property(e => e.GenerationTime).IsRequired();
+            entity.Property(e => e.GenerationTimeUtc).IsRequired();
+
+            entity.Property(e => e.Project).IsRequired().HasMaxLength(100);
+        });
+        
+        modelBuilder.Entity<ComparisonResult>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.AlarmMessage).IsRequired().HasMaxLength(500);
+        });
+        
+    }
+}
