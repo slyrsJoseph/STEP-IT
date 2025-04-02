@@ -7,7 +7,7 @@ public enum LogWeekType
     Week2 = 2,
     Week3 = 3,
     Week4 = 4,
-    // Добавляй по мере необходимости
+    
 }
 
     public class AlarmLog
@@ -33,5 +33,5 @@ public enum LogWeekType
         public DateTime GenerationTimeUtc { get; set; }
 
         public string Project { get; set; } = null!;
-        public LogWeekType WeekType { get; set; } // Добавили тип недели
+        public LogWeekType WeekType { get; set; } 
     }

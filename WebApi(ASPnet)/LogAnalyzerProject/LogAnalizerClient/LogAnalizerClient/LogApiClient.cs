@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace LogAnalizerClient;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -8,12 +11,9 @@ public class LogApiClient
 {
     private readonly HttpClient _httpClient;
 
-    public LogApiClient(string baseUrl)
+    public LogApiClient(HttpClient httpClient)
     {
-        _httpClient = new HttpClient
-        {
-            BaseAddress = new Uri(baseUrl)
-        };
+        _httpClient = httpClient;
     }
 
     public async Task ImportLogsAsync(string filePath, LogWeekType weekType)

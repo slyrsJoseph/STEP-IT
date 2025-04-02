@@ -15,23 +15,23 @@ public class LogController : ControllerBase
         _logService = logService;
     }
 
-    // Импорт логов
+    
     [HttpPost("import")]
     public async Task<IActionResult> ImportLogs([FromQuery] string filePath, [FromQuery] LogWeekType weekType)
     {
         await _logService.ImportLogsAsync(filePath, weekType);
-        return Ok("Импорт завершен.");
+        return Ok("Import finished succesful.");
     }
 
-    // Сравнение логов между неделями
+   
     [HttpPost("compare")]
     public async Task<IActionResult> CompareWeeks([FromQuery] LogWeekType week1, [FromQuery] LogWeekType week2)
     {
         await _logService.CompareWeeksAsync(week1, week2);
-        return Ok("Сравнение выполнено и сохранено.");
+        return Ok("Comparison has finished and saved.");
     }
 
-    // Получить результаты сравнения
+    
     [HttpGet("results")]
     public async Task<IActionResult> GetComparisonResults([FromQuery] LogWeekType week1, [FromQuery] LogWeekType week2)
     {

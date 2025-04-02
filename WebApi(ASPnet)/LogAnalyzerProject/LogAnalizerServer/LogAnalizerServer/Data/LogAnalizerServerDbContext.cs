@@ -5,11 +5,18 @@ using Microsoft.EntityFrameworkCore;
 
 
 public class LogAnalizerServerDbContext : DbContext
-{
+{  
+    public LogAnalizerServerDbContext(DbContextOptions<LogAnalizerServerDbContext> options)
+         : base(options)
+     {
+     }
     public DbSet<AlarmLog> AlarmLogs { get; set; } = null!;
     /*public DbSet<AlarmLog> CurrentWeekLogs { get; set; } = null!;
     public DbSet<AlarmLog> PreviousWeekLogs { get; set; } = null!;*/
     public DbSet<ComparisonResult> ComparisonResults { get; set; } = null!;
+    
+  
+    
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
