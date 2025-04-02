@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "LogAnalizerWpfClient/1.0.0": {
+        "dependencies": {
+          "LogAnalizerShared": "1.0.0"
+        },
+        "runtime": {
+          "LogAnalizerWpfClient.dll": {}
+        }
+      },
+      "LogAnalizerShared/1.0.0": {
+        "runtime": {
+          "LogAnalizerShared.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LogAnalizerWpfClient/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LogAnalizerShared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

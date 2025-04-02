@@ -1,0 +1,30 @@
+﻿<Window x:Class="LogAnalizerWpfClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Log Analyzer WPF" Height="400" Width="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+            <TextBox x:Name="textBoxFilePath" Width="300" Margin="0,0,10,0" IsReadOnly="True"/>
+            <Button Content="Browse" Width="80" Click="ButtonBrowse_Click"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10">
+            <ComboBox x:Name="comboBoxWeekType" Width="120" Margin="0,0,10,0"/>
+            <ComboBox x:Name="comboBoxWeekType2" Width="120"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,0,0,10">
+            <Button Content="Import" Width="80" Margin="0,0,10,0" Click="ButtonImport_Click"/>
+            <Button Content="Compare" Width="80" Click="ButtonCompare_Click"/>
+        </StackPanel>
+
+        <DataGrid x:Name="dataGridResults" Grid.Row="3" AutoGenerateColumns="True"/>
+    </Grid>
+</Window>
