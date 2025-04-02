@@ -29,7 +29,7 @@ namespace LogAnalizerWpfClient
             comboBoxWeekType2.ItemsSource = Enum.GetValues(typeof(LogWeekType));
         }
 
-        private void ButtonBrowse_Click(object sender, RoutedEventArgs e)
+        private void ButtonBrowseCurrent_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog
             {
@@ -38,13 +38,26 @@ namespace LogAnalizerWpfClient
 
             if (dialog.ShowDialog() == true)
             {
-                textBoxFilePath.Text = dialog.FileName;
+                textBoxCurrentWeekFile.Text = dialog.FileName;
+            }
+        }
+
+        private void ButtonBrowsePrevious_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                textBoxPreviousWeekFile.Text = dialog.FileName;
             }
         }
 
         private async void ButtonImport_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = textBoxFilePath.Text;
+            string filePath = textBoxCurrentWeekFile.Text;
             if (string.IsNullOrWhiteSpace(filePath))
             {
                 MessageBox.Show("Choose file.");
