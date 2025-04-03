@@ -31,6 +31,13 @@ public class LogController : ControllerBase
         return Ok("Comparison has finished and saved.");
     }
 
+    [HttpGet("compare/result")]
+    public async Task<IActionResult> CompareAndReturnResult([FromQuery] LogWeekType week1, [FromQuery] LogWeekType week2)
+    {
+        var result = await _logService.CompareWeeksInMemoryAsync(week1, week2); 
+        return Ok(result);
+    }
+    
     
     [HttpGet("results")]
     public async Task<IActionResult> GetComparisonResults([FromQuery] LogWeekType week1, [FromQuery] LogWeekType week2)

@@ -1,35 +1,36 @@
 ﻿<Window x:Class="LogAnalizerWpfClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Log Analyzer WPF" Height="400" Width="600">
+        Title="Log Analyzer WPF" Height="500" Width="700">
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/> <!-- Верхняя панель -->
+            <RowDefinition Height="Auto"/> <!-- Фильтры -->
+            <RowDefinition Height="*"/>    <!-- Таблица -->
+            <RowDefinition Height="Auto"/> <!-- Кнопки -->
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
-            <TextBox x:Name="textBoxCurrentWeekFile" Width="250" Margin="0,0,10,0" IsReadOnly="True"/>
-            <Button Content="Browse Current" Width="120" Click="ButtonBrowseCurrent_Click"/>
+        <!-- Файлы (текущая и предыдущая неделя) -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBox x:Name="textBoxCurrentWeekFile" Width="250" Margin="0,0,5,0"/>
+            <Button Content="Browse Current" Width="100" Click="ButtonBrowseCurrent_Click" Margin="0,0,10,0"/>
+            <TextBox x:Name="textBoxPreviousWeekFile" Width="250" Margin="0,0,5,0"/>
+            <Button Content="Browse Previous" Width="100" Click="ButtonBrowsePrevious_Click"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10">
-            <TextBox x:Name="textBoxPreviousWeekFile" Width="250" Margin="0,0,10,0" IsReadOnly="True"/>
-            <Button Content="Browse Previous" Width="120" Click="ButtonBrowsePrevious_Click"/>
-        </StackPanel>
-        
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10">
-            <ComboBox x:Name="comboBoxWeekType" Width="120" Margin="0,0,10,0"/>
-            <ComboBox x:Name="comboBoxWeekType2" Width="120"/>
+        <!-- Комбобоксы выбора недель -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <ComboBox x:Name="comboBoxWeekType" Width="150" Margin="0,0,10,0"/>
+            <ComboBox x:Name="comboBoxWeekType2" Width="150"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,0,0,10">
-            <Button Content="Import" Width="80" Margin="0,0,10,0" Click="ButtonImport_Click"/>
-            <Button Content="Compare" Width="80" Click="ButtonCompare_Click"/>
-        </StackPanel>
+        <!-- Таблица с результатами -->
+        <DataGrid Grid.Row="2" x:Name="dataGridResults" AutoGenerateColumns="True" Margin="0,0,0,10"/>
 
-        <DataGrid x:Name="dataGridResults" Grid.Row="3" AutoGenerateColumns="True"/>
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="Import" Width="100" Margin="0,0,10,0" Click="ButtonImport_Click"/>
+            <Button Content="Compare" Width="100" Click="ButtonCompare_Click"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -16,4 +16,9 @@ public class ComparisonResult
 
     public LogWeekType Week1Type { get; set; }
     public LogWeekType Week2Type { get; set; }
+    
+    [NotMapped]
+    public int Difference => CountWeek2 - CountWeek1;
+    
+    
 }

@@ -83,21 +83,28 @@ namespace LogAnalizerWpfClient
 
         private async void ButtonCompare_Click(object sender, RoutedEventArgs e)
         {
-            if (comboBoxWeekType.SelectedItem is not LogWeekType week1 ||
-                comboBoxWeekType2.SelectedItem is not LogWeekType week2)
+            if (comboBoxWeekType.SelectedItem is LogWeekType week1 &&
+                comboBoxWeekType2.SelectedItem is LogWeekType week2)
             {
-                MessageBox.Show("Choose both weeks to compare.");
-                return;
-            }
+                try
+                {
+                    // Шаг 1: сравнение и сохранение результатов в базу
+                    await _apiClient.CompareWeeksAsync(week1, week2);
 
-            try
-            {
-                var results = await _apiClient.GetComparisonResultsAsync(week1, week2);
-                dataGridResults.ItemsSource = results;
+                    // Шаг 2: получение результатов из базы
+                    var results = await _apiClient.GetComparisonResultsAsync(week1, week2);
+
+                    // Шаг 3: отображение в DataGrid
+                    dataGridResults.ItemsSource = results;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка при сравнении: {ex.Message}");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Compare ERROR: " + ex.Message);
+                MessageBox.Show("Выбери обе недели для сравнения.");
             }
         }
     }
