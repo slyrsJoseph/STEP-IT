@@ -44,4 +44,10 @@ public class LogApiClient
             $"api/log/compare/result?week1={week1}&week2={week2}");
     }
     
+    public async Task<List<LogWeekType>> GetAvailableWeekTypesAsync()
+    {
+        return await _httpClient.GetFromJsonAsync<List<LogWeekType>>("api/log/available-weeks");
+    }
+    
+    
 }

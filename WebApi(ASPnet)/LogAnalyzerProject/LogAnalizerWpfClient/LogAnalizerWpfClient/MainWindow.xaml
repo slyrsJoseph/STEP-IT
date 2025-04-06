@@ -1,36 +1,34 @@
 ﻿<Window x:Class="LogAnalizerWpfClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Log Analyzer WPF" Height="500" Width="700">
+        xmlns:local="clr-namespace:LogAnalizerWpfClient"
+        Title="Alarm Log Analyzer" Height="400" Width="600">
+    <!-- Главное окно приложения -->
     <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Верхняя панель -->
-            <RowDefinition Height="Auto"/> <!-- Фильтры -->
-            <RowDefinition Height="*"/>    <!-- Таблица -->
-            <RowDefinition Height="Auto"/> <!-- Кнопки -->
-        </Grid.RowDefinitions>
-
-        <!-- Файлы (текущая и предыдущая неделя) -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="textBoxCurrentWeekFile" Width="250" Margin="0,0,5,0"/>
-            <Button Content="Browse Current" Width="100" Click="ButtonBrowseCurrent_Click" Margin="0,0,10,0"/>
-            <TextBox x:Name="textBoxPreviousWeekFile" Width="250" Margin="0,0,5,0"/>
-            <Button Content="Browse Previous" Width="100" Click="ButtonBrowsePrevious_Click"/>
-        </StackPanel>
-
-        <!-- Комбобоксы выбора недель -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
-            <ComboBox x:Name="comboBoxWeekType" Width="150" Margin="0,0,10,0"/>
-            <ComboBox x:Name="comboBoxWeekType2" Width="150"/>
-        </StackPanel>
-
-        <!-- Таблица с результатами -->
-        <DataGrid Grid.Row="2" x:Name="dataGridResults" AutoGenerateColumns="True" Margin="0,0,0,10"/>
-
-        <!-- Кнопки -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left">
-            <Button Content="Import" Width="100" Margin="0,0,10,0" Click="ButtonImport_Click"/>
-            <Button Content="Compare" Width="100" Click="ButtonCompare_Click"/>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+            <!-- Блок импорта логов с указанием недели -->
+            <TextBlock Text="Import Logs with Week label:" FontWeight="Bold" Margin="0,0,0,5"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <ComboBox x:Name="comboImportWeek" Width="100" Margin="0,0,10,0"
+                          VerticalAlignment="Center"/>
+                <Button x:Name="btnImport" Content="Import Log" Click="btnImport_Click" 
+                        VerticalAlignment="Center"/>
+            </StackPanel>
+            <!-- Список загруженных логов с указанием недели и файла -->
+            <TextBlock Text="Loaded logs:" FontWeight="Bold"/>
+            <ListBox x:Name="listBoxLogs" Margin="0,5,0,10" 
+                     IsHitTestVisible="False" BorderThickness="0"/>
+            <Separator Margin="0,5,0,10"/>
+            <!-- Блок выбора двух недель для сравнения -->
+            <TextBlock Text="Compare Two Weeks:" FontWeight="Bold" Margin="0,0,0,5"/>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="comboWeek1" Width="100" Margin="0,0,10,0"
+                          VerticalAlignment="Center" />
+                <ComboBox x:Name="comboWeek2" Width="100" Margin="0,0,10,0"
+                          VerticalAlignment="Center" />
+                <Button x:Name="btnCompare" Content="Compare Logs" Click="btnCompare_Click" 
+                        VerticalAlignment="Center"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

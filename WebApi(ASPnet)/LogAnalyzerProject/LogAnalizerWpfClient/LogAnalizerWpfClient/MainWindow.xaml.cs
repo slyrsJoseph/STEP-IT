@@ -1,111 +1,152 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
+using System.IO;
+using System.Linq;
 using System.Windows;
-using Microsoft.Win32;
 using LogAnalizerShared;
-using System.Net.Http.Json;
+using Microsoft.Win32;
 
 namespace LogAnalizerWpfClient
 {
     public partial class MainWindow : Window
     {
-        private readonly HttpClient _httpClient;
-        private readonly LogApiClient _apiClient;
+        // Хранилище загруженных логов: для каждого WeekType сохраняем путь файла и словарь подсчётов AlarmMessage
+        private Dictionary<LogWeekType, (string FilePath, Dictionary<string, int> Counts)> logData 
+            = new Dictionary<LogWeekType, (string, Dictionary<string, int>)>();
 
         public MainWindow()
         {
             InitializeComponent();
-
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("http://localhost:5000")
-            };
-
-            _apiClient = new LogApiClient(_httpClient);
-
-            comboBoxWeekType.ItemsSource = Enum.GetValues(typeof(LogWeekType));
-            comboBoxWeekType2.ItemsSource = Enum.GetValues(typeof(LogWeekType));
+            // Заполняем выпадающий список доступных недель (WeekType) для импорта
+            comboImportWeek.ItemsSource = Enum.GetValues(typeof(LogWeekType));
+            comboImportWeek.SelectedIndex = 0;
+            // Кнопку сравнения отключаем до загрузки как минимум двух логов
+            btnCompare.IsEnabled = false;
         }
 
-        private void ButtonBrowseCurrent_Click(object sender, RoutedEventArgs e)
+        // Обработчик кнопки "Import Log" - импортирует лог-файл и привязывает к выбранной неделе
+      private void btnImport_Click(object sender, RoutedEventArgs e)
+{
+    if (comboImportWeek.SelectedItem == null)
+    {
+        MessageBox.Show("Выберите неделю (Week) перед импортом файла.", "Внимание",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+        return;
+    }
+
+    LogWeekType selectedWeek = (LogWeekType)comboImportWeek.SelectedItem;
+
+    OpenFileDialog ofd = new OpenFileDialog
+    {
+        Filter = "CSV Files (*.csv;*.txt)|*.csv;*.txt|All Files (*.*)|*.*",
+        Title = "Select Alarm Log File"
+    };
+
+    if (ofd.ShowDialog() == true)
+    {
+        string filePath = ofd.FileName;
+        try
         {
-            var dialog = new OpenFileDialog
-            {
-                Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
-            };
+            string[] lines = File.ReadAllLines(filePath);
+            Dictionary<string, int> counts = new Dictionary<string, int>();
 
-            if (dialog.ShowDialog() == true)
+            bool isFirstLine = true;
+            foreach (string line in lines)
             {
-                textBoxCurrentWeekFile.Text = dialog.FileName;
-            }
-        }
-
-        private void ButtonBrowsePrevious_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog
-            {
-                Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                textBoxPreviousWeekFile.Text = dialog.FileName;
-            }
-        }
-
-        private async void ButtonImport_Click(object sender, RoutedEventArgs e)
-        {
-            string filePath = textBoxCurrentWeekFile.Text;
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                MessageBox.Show("Choose file.");
-                return;
-            }
-
-            if (comboBoxWeekType.SelectedItem is not LogWeekType weekType)
-            {
-                MessageBox.Show("Choose week.");
-                return;
-            }
-
-            try
-            {
-                await _apiClient.ImportLogsAsync(filePath, weekType);
-                MessageBox.Show("Logs has successfully imported.!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error could not import log: " + ex.Message);
-            }
-        }
-
-        private async void ButtonCompare_Click(object sender, RoutedEventArgs e)
-        {
-            if (comboBoxWeekType.SelectedItem is LogWeekType week1 &&
-                comboBoxWeekType2.SelectedItem is LogWeekType week2)
-            {
-                try
+                if (isFirstLine)
                 {
-                    // Шаг 1: сравнение и сохранение результатов в базу
-                    await _apiClient.CompareWeeksAsync(week1, week2);
-
-                    // Шаг 2: получение результатов из базы
-                    var results = await _apiClient.GetComparisonResultsAsync(week1, week2);
-
-                    // Шаг 3: отображение в DataGrid
-                    dataGridResults.ItemsSource = results;
+                    isFirstLine = false; // Пропускаем заголовок
+                    continue;
                 }
-                catch (Exception ex)
+
+                string[] fields = line.Split(',');
+
+                if (fields.Length > 11)
                 {
-                    MessageBox.Show($"Ошибка при сравнении: {ex.Message}");
+                    string message = fields[11].Trim();
+
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        if (counts.ContainsKey(message))
+                            counts[message]++;
+                        else
+                            counts[message] = 1;
+                    }
                 }
             }
-            else
+
+            // Сохраняем или обновляем данные для выбранной недели
+            logData[selectedWeek] = (filePath, counts);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка при чтении файла: {ex.Message}", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        // Обновление списка загруженных логов в интерфейсе
+        listBoxLogs.Items.Clear();
+        foreach (var entry in logData)
+        {
+            LogWeekType week = entry.Key;
+            string fname = System.IO.Path.GetFileName(entry.Value.FilePath);
+            int totalCount = entry.Value.Counts.Values.Sum();
+            listBoxLogs.Items.Add($"{week}: {fname} ({totalCount} records)");
+        }
+
+        // Обновление списков недель для сравнения
+        var loadedWeeks = logData.Keys.ToList();
+        comboWeek1.ItemsSource = loadedWeeks;
+        comboWeek2.ItemsSource = loadedWeeks;
+
+        comboWeek1.SelectedItem = null;
+        comboWeek2.SelectedItem = null;
+
+        btnCompare.IsEnabled = logData.Count >= 2;
+    }
+}
+
+        // Обработчик кнопки "Compare Logs" - сравнение двух выбранных недель и отображение графика
+        private void btnCompare_Click(object sender, RoutedEventArgs e)
+        {
+            if (comboWeek1.SelectedItem == null || comboWeek2.SelectedItem == null)
             {
-                MessageBox.Show("Выбери обе недели для сравнения.");
+                MessageBox.Show("Не выбраны две недели для сравнения.", "Внимание",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
+            LogWeekType week1 = (LogWeekType)comboWeek1.SelectedItem;
+            LogWeekType week2 = (LogWeekType)comboWeek2.SelectedItem;
+            if (week1 == week2)
+            {
+                MessageBox.Show("Выберите две **разные** недели для сравнения.", "Внимание",
+                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            // Получаем словари AlarmMessage->Count для обеих недель
+            var data1 = logData[week1].Counts;
+            var data2 = logData[week2].Counts;
+            // Формируем объединённый список всех AlarmMessage из двух недель
+            var allMessages = new HashSet<string>(data1.Keys);
+            allMessages.UnionWith(data2.Keys);
+            // Создаем список результатов сравнения для каждого AlarmMessage
+            List<ComparisonResult> results = new List<ComparisonResult>();
+            foreach (string msg in allMessages)
+            {
+                int count1 = data1.ContainsKey(msg) ? data1[msg] : 0;
+                int count2 = data2.ContainsKey(msg) ? data2[msg] : 0;
+                // Опционально: сокращаем длинные названия сообщений для подписи на графике
+                string displayMsg = msg;
+                if (displayMsg.Length > 20)
+                    displayMsg = displayMsg.Substring(0, 17) + "...";
+                results.Add(new ComparisonResult { AlarmMessage = displayMsg, CountWeek1 = count1, CountWeek2 = count2 });
+            }
+            // Сортируем результаты по названию AlarmMessage для устойчивого порядка (можно изменить на нужный порядок)
+            results.Sort((a, b) => string.Compare(a.AlarmMessage, b.AlarmMessage, StringComparison.OrdinalIgnoreCase));
+            // Открываем окно с графиком сравнения
+            ChartWindow chartWindow = new ChartWindow(results, week1, week2);
+            chartWindow.Show();
         }
     }
 }

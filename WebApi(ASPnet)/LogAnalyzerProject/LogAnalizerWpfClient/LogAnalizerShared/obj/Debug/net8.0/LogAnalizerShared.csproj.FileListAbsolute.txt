@@ -9,3 +9,4 @@ C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerShared\obj\Debu
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerShared\obj\Debug\net8.0\refint\LogAnalizerShared.dll
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerShared\obj\Debug\net8.0\LogAnalizerShared.pdb
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerShared\obj\Debug\net8.0\ref\LogAnalizerShared.dll
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerShared\obj\Debug\net8.0\LogAnalizerShared.csproj.AssemblyReference.cache
