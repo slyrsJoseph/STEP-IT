@@ -8,6 +8,9 @@ public class ComparisonResult
 
     public int CountWeek1 { get; set; }
     public int CountWeek2 { get; set; }
+    
+    public string FinalState { get; set; }
+   
 
     public LogWeekType Week1Type { get; set; }
     public LogWeekType Week2Type { get; set; }

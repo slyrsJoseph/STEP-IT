@@ -9,6 +9,7 @@ using LogAnalizerShared;
 
 public class LogApiClient
 {
+   
     private readonly HttpClient _httpClient;
 
     public LogApiClient(HttpClient httpClient)
@@ -48,6 +49,9 @@ public class LogApiClient
     {
         return await _httpClient.GetFromJsonAsync<List<LogWeekType>>("api/log/available-weeks");
     }
-    
+    public async Task<List<AlarmlogClient>> GetLogsByWeekAsync(LogWeekType week)
+    {
+        return await _httpClient.GetFromJsonAsync<List<AlarmlogClient>>($"api/log/logs-by-week?week={week}");
+    }
     
 }

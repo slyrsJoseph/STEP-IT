@@ -28,6 +28,7 @@
                           VerticalAlignment="Center" />
                 <Button x:Name="btnCompare" Content="Compare Logs" Click="btnCompare_Click" 
                         VerticalAlignment="Center"/>
+                <Button Content="Verify Counts" Click="btnVerifyCounts_Click" Margin="5"/>
             </StackPanel>
         </StackPanel>
     </Grid>

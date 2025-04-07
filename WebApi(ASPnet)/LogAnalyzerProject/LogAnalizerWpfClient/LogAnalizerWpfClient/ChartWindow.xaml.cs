@@ -19,8 +19,7 @@ namespace LogAnalizerWpfClient
         private readonly List<ComparisonResult> _results;
         private readonly LogWeekType _week1;
         private readonly LogWeekType _week2;
-
-        public ChartWindow(List<ComparisonResult> results, LogWeekType week1, LogWeekType week2)
+        public ChartWindow(LogApiClient logApiClient,List<ComparisonResult> results, LogWeekType week1, LogWeekType week2)
         {
             InitializeComponent();
 
@@ -53,25 +52,38 @@ namespace LogAnalizerWpfClient
 
         private void comboCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (comboCategory.SelectedItem == null) return;
-
-            string selectedCategory = comboCategory.SelectedItem.ToString();
-
-            var filteredResults = _results
-                .Where(r => r.AlarmMessage.Contains(selectedCategory, StringComparison.OrdinalIgnoreCase))
-                .OrderByDescending(r => r.CountWeek1 + r.CountWeek2)
-                .ToList();
-
-            if (!filteredResults.Any())
+            try
             {
-                MessageBox.Show("No data for selected category.", "Information", MessageBoxButton.OK,
-                    MessageBoxImage.Information);
-                chart.Series = Array.Empty<ISeries>();
-                chart.XAxes = Array.Empty<Axis>();
-                chart.YAxes = Array.Empty<Axis>();
-                return;
-            }
+                if (comboCategory.SelectedItem == null || _results == null)
+                    return;
 
+                string selectedCategory = comboCategory.SelectedItem.ToString();
+
+                var filteredResults = _results
+                    .Where(r => !string.IsNullOrEmpty(r.AlarmMessage) &&
+                                r.AlarmMessage.Contains(selectedCategory, StringComparison.OrdinalIgnoreCase))
+                    .OrderByDescending(r => r.CountWeek1 + r.CountWeek2)
+                    .ToList();
+
+                if (!filteredResults.Any())
+                {
+                    MessageBox.Show("No data for selected category.", "Information", MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                    chart.Series = Array.Empty<ISeries>();
+                    chart.XAxes = Array.Empty<Axis>();
+                    chart.YAxes = Array.Empty<Axis>();
+                    return;
+                }
+
+                BuildChart(filteredResults);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating chart: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void BuildChart(List<ComparisonResult> filteredResults)
+        {
             var labels = filteredResults.Select(r => r.AlarmMessage).ToArray();
             var valuesWeek1 = filteredResults.Select(r => (double)r.CountWeek1).ToArray();
             var valuesWeek2 = filteredResults.Select(r => (double)r.CountWeek2).ToArray();

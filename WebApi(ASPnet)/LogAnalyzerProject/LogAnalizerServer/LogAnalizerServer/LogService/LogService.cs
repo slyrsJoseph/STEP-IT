@@ -24,68 +24,7 @@ namespace LogAnalizerServer
             _context = context;
             _logger = logger;
         }
-
-      
-/*public async Task ImportLogsAsync(string filePath,LogWeekType weekType)
-{
-    // Открываем файл на чтение
-    using var stream = File.OpenRead(filePath);
-    using var reader = new StreamReader(stream);
-
-    string headerLine = await reader.ReadLineAsync();
-    if (headerLine == null)
-    {
-        // Файл пустой, нечего импортировать
-        return;
-    }
-
-    int lineNumber = 1;  // номер текущей строки (учитывая заголовок)
-    string line;
-    while ((line = await reader.ReadLineAsync()) != null)
-    {
-        lineNumber++;
-        if (string.IsNullOrWhiteSpace(line))
-        {
-            continue; // пропускаем пустые строки, если таковые есть
-        }
-
-        // Разбираем строку CSV корректно, учитывая кавычки и запятые в тексте
-        string[] fields = ParseCsvLine(line);
-        if (fields.Length != 15)
-        {
-            _logger.LogWarning($"Line {lineNumber} has unexpected format");
-            continue;
-        }
-
-        // Теперь fields содержит 15 элементов, включая последнее пустое поле (project).
-        // Можно выполнить дальнейшую обработку: парсинг по типам и сохранение данных.
-        try 
-        {
-            DateTime timestamp = DateTime.Parse(fields[0]);
-            DateTime timestamp2 = DateTime.Parse(fields[1]);
-            long eventId = long.Parse(fields[2]);
-            string code = fields[3];
-            string category = fields[4];
-            string device = fields[5];
-            string source = fields[6];
-            string tag = fields[7];
-            string status1 = fields[8];
-            string status2 = fields[9];
-            string status3 = fields[10];
-            string message = fields[11];
-            DateTime loggedTime = DateTime.Parse(fields[12]);
-            DateTime anotherTime = DateTime.Parse(fields[13]);
-            string project = fields[14]; // может быть пустой строкой
-
-            // ... (код сохранения или использования прочитанных данных)
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning($"Line {lineNumber} has invalid data: {ex.Message}");
-            continue;
-        }
-    }
-}*/
+        
        
 public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
 {
@@ -210,14 +149,14 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
             {
                 
                 var week1Groups = await _context.AlarmLogs
-                    .Where(log => log.WeekType == week1)
+                    .Where(log => log.WeekType == week1 && log.FinalState == "G")
                     .GroupBy(log => log.AlarmMessage)
                     .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
                     .ToListAsync();
 
                 
                 var week2Groups = await _context.AlarmLogs
-                    .Where(log => log.WeekType == week2)
+                    .Where(log => log.WeekType == week2 && log.FinalState == "G")
                     .GroupBy(log => log.AlarmMessage)
                     .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
                     .ToListAsync();
@@ -277,13 +216,13 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
         public async Task<List<ComparisonResult>> CompareWeeksInMemoryAsync(LogWeekType week1, LogWeekType week2)
         {
             var week1Groups = await _context.AlarmLogs
-                .Where(log => log.WeekType == week1)
+                .Where(log => log.WeekType == week1 && log.FinalState == "G")
                 .GroupBy(log => log.AlarmMessage)
                 .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
                 .ToListAsync();
 
             var week2Groups = await _context.AlarmLogs
-                .Where(log => log.WeekType == week2)
+                .Where(log => log.WeekType == week2 && log.FinalState == "G")
                 .GroupBy(log => log.AlarmMessage)
                 .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
                 .ToListAsync();
