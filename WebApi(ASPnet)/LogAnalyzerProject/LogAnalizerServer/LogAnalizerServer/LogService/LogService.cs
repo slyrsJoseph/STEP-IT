@@ -147,16 +147,23 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
         {
             try
             {
+                var allowedAlarmClasses = new[]
+                {
+                    "CRI_B" , "CRI_C" , "CRI_A", "FAULT",
+                    "SYS_A", "SYS_B", "SYS_C",
+                    "WRN", "WRN_A", "WRN_B", "WRN_C"
+                };
+                
                 
                 var week1Groups = await _context.AlarmLogs
-                    .Where(log => log.WeekType == week1 && log.FinalState == "G")
+                    .Where(log => log.WeekType == week1 && log.FinalState == "G" && allowedAlarmClasses.Contains(log.AlarmClass))
                     .GroupBy(log => log.AlarmMessage)
                     .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
                     .ToListAsync();
 
                 
                 var week2Groups = await _context.AlarmLogs
-                    .Where(log => log.WeekType == week2 && log.FinalState == "G")
+                    .Where(log => log.WeekType == week2 && log.FinalState == "G" && allowedAlarmClasses.Contains(log.AlarmClass))
                     .GroupBy(log => log.AlarmMessage)
                     .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
                     .ToListAsync();
@@ -215,14 +222,22 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
         
         public async Task<List<ComparisonResult>> CompareWeeksInMemoryAsync(LogWeekType week1, LogWeekType week2)
         {
+            
+            var allowedAlarmClasses = new[]
+            {
+                "CRI_B", "CRI_C", "CRI_A", "FAULT",
+                "SYS_A", "SYS_B", "SYS_C",
+                "WRN", "WRN_A", "WRN_B", "WRN_C"
+            };
+            
             var week1Groups = await _context.AlarmLogs
-                .Where(log => log.WeekType == week1 && log.FinalState == "G")
+                .Where(log => log.WeekType == week1 && log.FinalState == "G"&& allowedAlarmClasses.Contains(log.AlarmClass))
                 .GroupBy(log => log.AlarmMessage)
                 .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
                 .ToListAsync();
 
             var week2Groups = await _context.AlarmLogs
-                .Where(log => log.WeekType == week2 && log.FinalState == "G")
+                .Where(log => log.WeekType == week2 && log.FinalState == "G"&& allowedAlarmClasses.Contains(log.AlarmClass))
                 .GroupBy(log => log.AlarmMessage)
                 .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
                 .ToListAsync();

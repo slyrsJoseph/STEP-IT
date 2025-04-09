@@ -33,7 +33,7 @@ namespace LogAnalizerWpfClient
             comboReportType.SelectedIndex = 0;
 
             comboCategory.ItemsSource = new List<string>
-                { "VPH", "BRC", "LGA", "HRN", "DDM", "DW", "TFM", "ELT" };
+                { "VPH", "BRC", "LGA", "HRN", "DDM", "DW", "TFM", "ELT","PDPH" };
             comboCategory.SelectedIndex = -1; // Ничего не выбрано по умолчанию
         }
 
