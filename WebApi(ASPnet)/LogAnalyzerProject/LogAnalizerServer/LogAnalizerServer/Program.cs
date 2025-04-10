@@ -18,7 +18,14 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-app.Urls.Add("http://localhost:5000");
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LogAnalizerServerDbContext>();
+    db.Database.Migrate();
+   
+}
+
+app.Urls.Add("http://localhost:5001");
 
 
 app.UseAuthorization();

@@ -41,6 +41,5 @@ C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\bin\D
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\bin\Debug\net8.0-windows\runtimes\win-x86\native\libSkiaSharp.dll
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\ChartWindow.baml
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\ChartWindow.g.cs
-C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\LogAnalizerWpfClient_MarkupCompile.lref
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\SplashWindow.baml
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\SplashWindow.g.cs

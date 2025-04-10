@@ -25,19 +25,7 @@ public class LogApiClient
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task CompareWeeksAsync(LogWeekType week1, LogWeekType week2)
-    {
-        var response = await _httpClient.PostAsync(
-            $"api/log/compare?week1={week1}&week2={week2}", null);
-
-        response.EnsureSuccessStatusCode();
-    }
-
-    public async Task<List<ComparisonResult>> GetComparisonResultsAsync(LogWeekType week1, LogWeekType week2)
-    {
-        return await _httpClient.GetFromJsonAsync<List<ComparisonResult>>(
-            $"api/log/results?week1={week1}&week2={week2}");
-    }
+   
   
     public async Task<List<ComparisonResult>> CompareWeeksInMemoryAsync(LogWeekType week1, LogWeekType week2)
     {

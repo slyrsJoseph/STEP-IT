@@ -26,6 +26,87 @@ namespace LogAnalizerServer
         }
         
        
+
+
+/*public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
+{
+    // ✅ Удаляем старые записи для выбранной недели
+    var deletedCount = await _context.AlarmLogs
+        .Where(log => log.WeekType == weekType)
+        .BatchDeleteAsync();
+
+    _logger.LogInformation($"Удалено {deletedCount} записей по неделе {weekType} перед импортом.");
+
+    using var stream = File.OpenRead(filePath);
+    using var reader = new StreamReader(stream);
+
+    string headerLine = await reader.ReadLineAsync();
+    if (headerLine == null)
+    {
+        _logger.LogWarning("ImportLogsAsync: файл пустой.");
+        return;
+    }
+
+    int lineNumber = 1;
+    string line;
+    var logsToAdd = new List<AlarmLog>();
+
+    while ((line = await reader.ReadLineAsync()) != null)
+    {
+        lineNumber++;
+        if (string.IsNullOrWhiteSpace(line))
+            continue;
+
+        string[] fields = ParseCsvLine(line);
+        if (fields.Length != 15)
+        {
+            _logger.LogWarning($"Line {lineNumber} has unexpected format");
+            continue;
+        }
+
+        try
+        {
+            var alarmLog = new AlarmLog
+            {
+                TimeWhenLogged = DateTime.Parse(fields[0]),
+                LocalZoneTime = DateTime.Parse(fields[1]),
+                SequenceNumber = long.Parse(fields[2]),
+                AlarmId = fields[3],
+                AlarmClass = fields[4],
+                Resource = fields[5],
+                LoggedBy = fields[6],
+                Reference = fields[7],
+                PrevState = fields[8],
+                LogAction = fields[9],
+                FinalState = fields[10],
+                AlarmMessage = fields[11],
+                GenerationTime = DateTime.Parse(fields[12]),
+                GenerationTimeUtc = DateTime.Parse(fields[13]),
+                Project = fields[14],
+                WeekType = weekType
+            };
+
+            logsToAdd.Add(alarmLog);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"Line {lineNumber} has invalid data: {ex.Message}");
+        }
+    }
+
+    if (logsToAdd.Any())
+    {
+        await _context.BulkInsertAsync(logsToAdd);
+        _logger.LogInformation($"ImportLogsAsync: Импортировано {logsToAdd.Count} логов через BulkInsert.");
+        
+        await _context.Database.ExecuteSqlRawAsync("VACUUM;");
+    }
+    else
+    {
+        _logger.LogWarning("ImportLogsAsync: Нет корректных логов для сохранения.");
+    }
+}*/
+
 public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
 {
     using var stream = File.OpenRead(filePath);
@@ -74,7 +155,7 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
                 GenerationTime = DateTime.Parse(fields[12]),
                 GenerationTimeUtc = DateTime.Parse(fields[13]),
                 Project = fields[14],
-                WeekType = weekType // 🟢 Указан тип недели
+                WeekType = weekType
             };
 
             logsToAdd.Add(alarmLog);
@@ -87,11 +168,16 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
 
     if (logsToAdd.Any())
     {
-        /*await _context.AlarmLogs.AddRangeAsync(logsToAdd);
-        await _context.SaveChangesAsync();
-        _logger.LogInformation($"ImportLogsAsync: Импортировано {logsToAdd.Count} логов.");*/
+        // ✅ Быстрое массовое удаление всех записей по неделе
+        await _context.AlarmLogs
+            .Where(log => log.WeekType == weekType)
+            .BatchDeleteAsync();
+
+        _logger.LogInformation($"Удалены старые логи по неделе {weekType}");
+
+        // ✅ Массовая вставка новых логов
         await _context.BulkInsertAsync(logsToAdd);
-        _logger.LogInformation($"ImportLogsAsync: Импортировано {logsToAdd.Count} логов через BulkInsert.");
+        _logger.LogInformation($"Импортировано {logsToAdd.Count} логов через BulkInsert.");
     }
     else
     {
@@ -143,82 +229,7 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
             return fields.ToArray();
         }
       
-        public async Task CompareWeeksAsync(LogWeekType week1, LogWeekType week2)
-        {
-            try
-            {
-                var allowedAlarmClasses = new[]
-                {
-                    "CRI_B" , "CRI_C" , "CRI_A", "FAULT",
-                    "SYS_A", "SYS_B", "SYS_C",
-                    "WRN", "WRN_A", "WRN_B", "WRN_C"
-                };
-                
-                
-                var week1Groups = await _context.AlarmLogs
-                    .Where(log => log.WeekType == week1 && log.FinalState == "G" && allowedAlarmClasses.Contains(log.AlarmClass))
-                    .GroupBy(log => log.AlarmMessage)
-                    .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
-                    .ToListAsync();
-
-                
-                var week2Groups = await _context.AlarmLogs
-                    .Where(log => log.WeekType == week2 && log.FinalState == "G" && allowedAlarmClasses.Contains(log.AlarmClass))
-                    .GroupBy(log => log.AlarmMessage)
-                    .Select(g => new { AlarmMessage = g.Key, Count = g.Count() })
-                    .ToListAsync();
-
-               
-                var week1Dict = week1Groups.ToDictionary(x => x.AlarmMessage, x => x.Count);
-                var week2Dict = week2Groups.ToDictionary(x => x.AlarmMessage, x => x.Count);
-
-                
-                var allMessages = new HashSet<string>(week1Dict.Keys);
-                allMessages.UnionWith(week2Dict.Keys);
-
-               
-                var comparisonResults = new List<ComparisonResult>();
-                foreach (var message in allMessages)
-                {
-                    week1Dict.TryGetValue(message, out int count1);
-                    week2Dict.TryGetValue(message, out int count2);
-
-                    comparisonResults.Add(new ComparisonResult
-                    {
-                        AlarmMessage = message,
-                        CountWeek1 = count1,
-                        CountWeek2 = count2,
-                        Week1Type = week1,
-                        Week2Type = week2
-                    });
-                }
-
-                try
-                {
-                    
-                    var existingResults = await _context.ComparisonResults
-                        .Where(r => r.Week1Type == week1 && r.Week2Type == week2)
-                        .ToListAsync();
-                    if (existingResults.Any())
-                    {
-                        _context.ComparisonResults.RemoveRange(existingResults);
-                    }
-
-                    
-                    await _context.ComparisonResults.AddRangeAsync(comparisonResults);
-                    await _context.SaveChangesAsync();
-                    Console.WriteLine($"CompareWeeksAsync: Comparison between {week1} and {week2} saved with {comparisonResults.Count} results.");
-                }
-                catch (Exception exSave)
-                {
-                    Console.WriteLine($"CompareWeeksAsync: Error saving comparison results to database: {exSave.Message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"CompareWeeksAsync: Error during comparison of weeks {week1} and {week2}: {ex.Message}");
-            }
-        }
+       
         
         public async Task<List<ComparisonResult>> CompareWeeksInMemoryAsync(LogWeekType week1, LogWeekType week2)
         {
@@ -267,21 +278,7 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
             return comparisonResults;
         }
 
-    
-        public async Task<List<ComparisonResult>> GetComparisonResultsAsync(LogWeekType week1, LogWeekType week2)
-        {
-            try
-            {
-                return await _context.ComparisonResults
-                    .Where(r => r.Week1Type == week1 && r.Week2Type == week2)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"GetComparisonResultsAsync: Error retrieving comparison results for {week1} vs {week2}: {ex.Message}");
-                return new List<ComparisonResult>();
-            }
-        }
+        
         public async Task<List<LogWeekType>> GetAvailableWeekTypesAsync()
         {
             return await _context.AlarmLogs

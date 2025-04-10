@@ -7,6 +7,10 @@ public enum LogWeekType
     Week2 = 2,
     Week3 = 3,
     Week4 = 4,
+    Week5 = 5,
+    Week6 = 6,
+    Week7 = 7,
+    Week8 = 8,
     
 }
 
