@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\App.xaml
-21855421912
+3571637644
 
-6-776389641
+7347817596
 209-803033227
-ChartWindow.xaml;MainWindow.xaml;
+ChartWindow.xaml;MainWindow.xaml;SplashWindow.xaml;
 
 False
 

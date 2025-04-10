@@ -11,8 +11,9 @@
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <ComboBox x:Name="comboImportWeek" Width="100" Margin="0,0,10,0"
                           VerticalAlignment="Center"/>
-                <Button x:Name="btnImport" Content="Import Log" Click="btnImport_Click" 
-                        VerticalAlignment="Center"/>
+                <Button x:Name="btnImport" Content="Import Log" Click="btnImport_Click"/> 
+                <Button Content="Reset Logs" Margin="5,0,0,0" Width="80" Click="btnResetLogs_Click"/>
+                        <!--VerticalAlignment="Center"/>-->
             </StackPanel>
             <!-- Список загруженных логов с указанием недели и файла -->
             <TextBlock Text="Loaded logs:" FontWeight="Bold"/>

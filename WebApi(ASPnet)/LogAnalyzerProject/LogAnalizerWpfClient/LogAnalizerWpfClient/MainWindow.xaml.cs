@@ -109,7 +109,24 @@ namespace LogAnalizerWpfClient
                 btnCompare.IsEnabled = logData.Count >= 2;
             }
         }
+         
+        private void btnResetLogs_Click(object sender, RoutedEventArgs e)
+        {
+            logData.Clear();
+            listBoxLogs.Items.Clear();
 
+            comboWeek1.ItemsSource = null;
+            comboWeek2.ItemsSource = null;
+
+            comboWeek1.SelectedItem = null;
+            comboWeek2.SelectedItem = null;
+
+            btnCompare.IsEnabled = false;
+
+            MessageBox.Show("Логи сброшены. Выберите новые файлы для анализа.", "Информация",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        
         // Обработчик кнопки "Compare Logs" - сравнение двух выбранных недель и отображение графика
         /*private void btnCompare_Click(object sender, RoutedEventArgs e)
         {
