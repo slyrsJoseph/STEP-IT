@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Windows;
 using LogAnalizerShared;
 using Microsoft.Win32;
-
+using System.Windows.Input;
 namespace LogAnalizerWpfClient
 {
     public partial class MainWindow : Window
@@ -131,7 +131,21 @@ namespace LogAnalizerWpfClient
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-      
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
+        }
         
         
     }

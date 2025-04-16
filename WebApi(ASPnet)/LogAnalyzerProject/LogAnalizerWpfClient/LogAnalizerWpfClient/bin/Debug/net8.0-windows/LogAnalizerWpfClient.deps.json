@@ -9,6 +9,7 @@
       "LogAnalizerWpfClient/1.0.0": {
         "dependencies": {
           "LiveChartsCore": "2.0.0-rc5.4",
+          "LiveChartsCore.SkiaSharpView": "2.0.0-rc5.4",
           "LiveChartsCore.SkiaSharpView.WPF": "2.0.0-rc5.4",
           "LogAnalizerShared": "1.0.0",
           "SkiaSharp": "3.116.1",

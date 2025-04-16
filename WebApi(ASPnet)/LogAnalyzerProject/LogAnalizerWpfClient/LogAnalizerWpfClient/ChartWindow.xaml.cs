@@ -2,15 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LogAnalizerShared;
+using System.Windows.Input;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using LogAnalizerShared;
+
+using LiveChartsCore.Kernel.Sketches;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.WPF;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace LogAnalizerWpfClient
 {
@@ -19,7 +24,8 @@ namespace LogAnalizerWpfClient
         private readonly List<ComparisonResult> _results;
         private readonly LogWeekType _week1;
         private readonly LogWeekType _week2;
-        public ChartWindow(LogApiClient logApiClient,List<ComparisonResult> results, LogWeekType week1, LogWeekType week2)
+
+        public ChartWindow(LogApiClient logApiClient, List<ComparisonResult> results, LogWeekType week1, LogWeekType week2)
         {
             InitializeComponent();
 
@@ -33,21 +39,13 @@ namespace LogAnalizerWpfClient
             comboReportType.SelectedIndex = 0;
 
             comboCategory.ItemsSource = new List<string>
-                { "VPH", "BRC", "LGA", "HRN", "DDM", "DW", "TFM", "ELT","PDPH" };
-            comboCategory.SelectedIndex = -1; // Ничего не выбрано по умолчанию
+                { "VPH", "BRC", "LGA", "HRN", "DDM", "DW", "TFM", "ELT", "PDPH" };
+            comboCategory.SelectedIndex = -1;
         }
 
         private void comboReportType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Можно будет добавить другие отчеты
-            if (comboReportType.SelectedItem?.ToString() == "Equipment Alarms")
-            {
-                comboCategory.IsEnabled = true;
-            }
-            else
-            {
-                comboCategory.IsEnabled = false;
-            }
+            comboCategory.IsEnabled = comboReportType.SelectedItem?.ToString() == "Equipment Alarms";
         }
 
         private void comboCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -82,6 +80,7 @@ namespace LogAnalizerWpfClient
                 MessageBox.Show($"Error updating chart: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void BuildChart(List<ComparisonResult> filteredResults)
         {
             var labels = filteredResults.Select(r => r.AlarmMessage).ToArray();
@@ -93,7 +92,7 @@ namespace LogAnalizerWpfClient
                 Values = valuesWeek1,
                 Name = _week1.ToString(),
                 Fill = new SolidColorPaint(SKColors.SteelBlue),
-                DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                DataLabelsPaint = new SolidColorPaint(SKColors.Cyan),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString()
             };
@@ -103,7 +102,7 @@ namespace LogAnalizerWpfClient
                 Values = valuesWeek2,
                 Name = _week2.ToString(),
                 Fill = new SolidColorPaint(SKColors.OrangeRed),
-                DataLabelsPaint = new SolidColorPaint(SKColors.Black),
+                DataLabelsPaint = new SolidColorPaint(SKColors.Cyan),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString()
             };
@@ -116,7 +115,8 @@ namespace LogAnalizerWpfClient
                 {
                     Labels = labels,
                     LabelsRotation = 45,
-                    TextSize = 12
+                    TextSize = 12,
+                    LabelsPaint = new SolidColorPaint(SKColors.Cyan)
                 }
             };
 
@@ -125,10 +125,16 @@ namespace LogAnalizerWpfClient
                 new Axis
                 {
                     Name = "Count",
-                    TextSize = 12
+                    TextSize = 12,
+                    LabelsPaint = new SolidColorPaint(SKColors.Cyan),
+                    NamePaint = new SolidColorPaint(SKColors.Cyan)
                 }
             };
+            
+            chart.LegendTextPaint = new SolidColorPaint(SKColors.Cyan);
+            
         }
+        
 
         private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -142,12 +148,34 @@ namespace LogAnalizerWpfClient
             if (dialog.ShowDialog() == true)
             {
                 var filePath = dialog.FileName;
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    //chart.SavePng(fileStream, new SKSize(1920, 1080));
-                }
+                using var stream = new FileStream(filePath, FileMode.Create);
+               // var image = chart.AsBitmap(new SKSize(1200, 800));
+              //  image.Encode(stream, SKEncodedImageFormat.Png, 100);
                 MessageBox.Show($"Chart saved to {filePath}", "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+        }
+
+        
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+        private void MaximizeRestore_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal)
+                WindowState = WindowState.Maximized;
+            else
+                WindowState = WindowState.Normal;
+        }
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                DragMove();
         }
     }
 }

@@ -649,6 +649,7 @@
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
       "LiveChartsCore >= 2.0.0-rc5.4",
+      "LiveChartsCore.SkiaSharpView >= 2.0.0-rc5.4",
       "LiveChartsCore.SkiaSharpView.WPF >= 2.0.0-rc5.4",
       "LogAnalizerShared >= 1.0.0",
       "SkiaSharp >= 3.116.1",
@@ -709,6 +710,10 @@
         "targetAlias": "net8.0-windows",
         "dependencies": {
           "LiveChartsCore": {
+            "target": "Package",
+            "version": "[2.0.0-rc5.4, )"
+          },
+          "LiveChartsCore.SkiaSharpView": {
             "target": "Package",
             "version": "[2.0.0-rc5.4, )"
           },
