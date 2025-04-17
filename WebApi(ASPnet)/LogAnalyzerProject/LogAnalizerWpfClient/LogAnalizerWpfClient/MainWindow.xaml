@@ -5,6 +5,44 @@
         WindowStyle="None" AllowsTransparency="True" Background="Transparent">
 
     <Window.Resources>
+        
+        <Style x:Key="TechnoComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Foreground" Value= "#000000"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="BorderBrush" Value="#00FFFF"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="white"/>
+                        <Setter Property="Background" Value="Black"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="Padding" Value="2"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        
         <Style x:Key="TechnoButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#000000"/>
             <Setter Property="Foreground" Value="White"/>
@@ -58,6 +96,7 @@
                             Background="#1A1A1A" Foreground="White" BorderBrush="#00FFFF"/>
                     <Button Content="✖" Width="40" Height="30" Click="Close_Click" 
                             Background="#1A1A1A" Foreground="White" BorderBrush="#FF4B4B"/>
+                    
                 </StackPanel>
             </DockPanel>
 
@@ -65,9 +104,17 @@
             <StackPanel Grid.Row="1" Margin="10">
                 <StackPanel Orientation="Horizontal" Margin="0,10">
                     <TextBlock Text="Import Logs with Week label:" Foreground="#00FFFF" VerticalAlignment="Center"/>
-                    <ComboBox x:Name="comboImportWeek" Width="120" Margin="10,0" />
+                    <ComboBox x:Name="comboImportWeek"
+                              Width="150"
+                              Style="{StaticResource TechnoComboBoxStyle}"
+                              SelectedIndex="0"/>
                     <Button x:Name="btnImport" Content="Import Log" Style="{StaticResource TechnoButtonStyle}" Click="btnImport_Click"/>
                     <Button x:Name="btnReset" Content="Reset Logs" Style="{StaticResource TechnoButtonStyle}" Click="btnResetLogs_Click"/>
+                    <Button x:Name="btnViewInTable"
+                            Content="View in Table"
+                            Style="{StaticResource TechnoButtonStyle}"
+                            Margin="4"
+                            Click="btnViewInTable_Click"/>
                 </StackPanel>
 
                 <TextBlock Text="Loaded logs:" Foreground="#00FFFF" Margin="0,10,0,5"/>

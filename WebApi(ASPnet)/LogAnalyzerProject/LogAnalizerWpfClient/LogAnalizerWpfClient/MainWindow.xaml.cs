@@ -11,6 +11,8 @@ namespace LogAnalizerWpfClient
 {
     public partial class MainWindow : Window
     {
+        
+       
         private readonly LogApiClient _logApiClient;
         private readonly List<(string FilePath, LogWeekType Week)> importedLogs = new();
 
@@ -96,6 +98,47 @@ namespace LogAnalizerWpfClient
 
             MessageBox.Show("Логи сброшены. Выберите новые файлы для анализа.", "Информация",
                 MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        
+        private async void btnViewInTable_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (importedLogs.Count < 2)
+                {
+                    MessageBox.Show("Необходимо импортировать два файла перед просмотром таблицы.", "Предупреждение",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Берём две недели из импортированных логов
+                var week1 = importedLogs[0].Week;
+                var week2 = importedLogs[1].Week;
+
+                var logsWeek1 = await _logApiClient.GetLogsByWeekAsync(week1);
+                var logsWeek2 = await _logApiClient.GetLogsByWeekAsync(week2);
+
+                var allLogs = logsWeek1.Concat(logsWeek2).ToList();
+
+                // Фильтрация как для графика
+                var allowedAlarmClasses = new[]
+                {
+                    "CRI_B", "CRI_C", "CRI_A", "FAULT",
+                    "SYS_A", "SYS_B", "SYS_C",
+                    "WRN", "WRN_A", "WRN_B", "WRN_C"
+                };
+
+                var filtered = allLogs
+                    .Where(log => log.FinalState == "G" && allowedAlarmClasses.Contains(log.AlarmClass))
+                    .ToList();
+
+                var window = new TableViewWindow(filtered);
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при отображении таблицы: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         
         
