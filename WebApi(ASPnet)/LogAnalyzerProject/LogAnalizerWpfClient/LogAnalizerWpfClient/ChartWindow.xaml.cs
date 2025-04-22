@@ -16,7 +16,8 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.WPF;
 using LiveChartsCore.Kernel.Sketches;
-
+using LiveChartsCore.Drawing;
+using LiveChartsCore.Measure;
 namespace LogAnalizerWpfClient
 {
     public partial class ChartWindow : Window
@@ -28,6 +29,8 @@ namespace LogAnalizerWpfClient
         public ChartWindow(LogApiClient logApiClient, List<ComparisonResult> results, LogWeekType week1, LogWeekType week2)
         {
             InitializeComponent();
+            
+          
 
             this.Title = $"Comparison: {week1} vs {week2}";
 
@@ -41,14 +44,30 @@ namespace LogAnalizerWpfClient
             comboCategory.ItemsSource = new List<string>
                 { "VPH", "BRC", "LGA", "HRN", "DDM", "DW", "TFM", "ELT", "PDPH" };
             comboCategory.SelectedIndex = -1;
+            
+            
+            
+            
         }
-
+        
+        
         private void comboReportType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             comboCategory.IsEnabled = comboReportType.SelectedItem?.ToString() == "Equipment Alarms";
         }
 
         private void comboCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RefreshChart();
+        }
+        
+        
+        private void comboMinCount_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RefreshChart();
+        }
+
+        private void RefreshChart()
         {
             try
             {
@@ -57,9 +76,13 @@ namespace LogAnalizerWpfClient
 
                 string selectedCategory = comboCategory.SelectedItem.ToString();
 
+                if (!int.TryParse(((ComboBoxItem)comboMinCount.SelectedItem)?.Content.ToString(), out int minCount))
+                    minCount = 0;
+
                 var filteredResults = _results
                     .Where(r => !string.IsNullOrEmpty(r.AlarmMessage) &&
-                                r.AlarmMessage.Contains(selectedCategory, StringComparison.OrdinalIgnoreCase))
+                                r.AlarmMessage.Contains(selectedCategory, StringComparison.OrdinalIgnoreCase) &&
+                                (r.CountWeek1 > minCount || r.CountWeek2 > minCount))
                     .OrderByDescending(r => r.CountWeek1 + r.CountWeek2)
                     .ToList();
 
@@ -81,11 +104,44 @@ namespace LogAnalizerWpfClient
             }
         }
 
-        private void BuildChart(List<ComparisonResult> filteredResults)
+        
+
+      private void BuildChart(List<ComparisonResult> filteredResults)
         {
-            var labels = filteredResults.Select(r => r.AlarmMessage).ToArray();
+            /*var labels = filteredResults.Select(r => r.AlarmMessage).ToArray();
+            
+         
+            
             var valuesWeek1 = filteredResults.Select(r => (double)r.CountWeek1).ToArray();
-            var valuesWeek2 = filteredResults.Select(r => (double)r.CountWeek2).ToArray();
+            var valuesWeek2 = filteredResults.Select(r => (double)r.CountWeek2).ToArray();*/
+            
+            var labels = new List<string>();
+            var valuesWeek1 = new List<double>();
+            var valuesWeek2 = new List<double>();
+
+            foreach (var result in filteredResults)
+            {
+                // добавляем реальные данные
+                labels.Add(result.AlarmMessage);
+                valuesWeek1.Add(result.CountWeek1);
+                valuesWeek2.Add(result.CountWeek2);
+
+                // добавляем пустую "группу"
+                labels.Add(""); // пустой label
+                valuesWeek1.Add(double.NaN); // нулевые значения
+                valuesWeek2.Add(double.NaN);
+                
+                labels.Add(""); // пустой label
+                valuesWeek1.Add(double.NaN); // нулевые значения
+                valuesWeek2.Add(double.NaN);
+                
+                
+                /*labels.Add(""); // пустой label
+                valuesWeek1.Add(double.NaN); // нулевые значения
+                valuesWeek2.Add(double.NaN);*/
+                
+                
+            }
 
             var seriesWeek1 = new ColumnSeries<double>
             {
@@ -94,7 +150,8 @@ namespace LogAnalizerWpfClient
                 Fill = new SolidColorPaint(SKColors.SteelBlue),
                 DataLabelsPaint = new SolidColorPaint(SKColors.Cyan),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
-                DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString()
+                DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString(),
+                
             };
 
             var seriesWeek2 = new ColumnSeries<double>
@@ -104,7 +161,8 @@ namespace LogAnalizerWpfClient
                 Fill = new SolidColorPaint(SKColors.OrangeRed),
                 DataLabelsPaint = new SolidColorPaint(SKColors.Cyan),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
-                DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString()
+                DataLabelsFormatter = point => point.Coordinate.PrimaryValue.ToString(),
+                
             };
 
             chart.Series = new ISeries[] { seriesWeek1, seriesWeek2 };
@@ -114,12 +172,17 @@ namespace LogAnalizerWpfClient
                 new Axis
                 {
                     Labels = labels,
-                    LabelsRotation = 45,
+                    LabelsRotation = 25,
                     TextSize = 12,
-                    LabelsPaint = new SolidColorPaint(SKColors.Cyan)
+                    LabelsPaint = new SolidColorPaint(SKColors.Cyan),
+                    UnitWidth = 1,
+                    ForceStepToMin = true,
+                    Padding = new Padding(20, 0, 0, 50),
+                    MinStep = 4,
+                   
                 }
             };
-
+            
             chart.YAxes = new Axis[]
             {
                 new Axis
@@ -130,10 +193,15 @@ namespace LogAnalizerWpfClient
                     NamePaint = new SolidColorPaint(SKColors.Cyan)
                 }
             };
-            
+
             chart.LegendTextPaint = new SolidColorPaint(SKColors.Cyan);
             
+            
+          
         }
+      
+
+       
         
 
         private async void btnSave_Click(object sender, RoutedEventArgs e)
@@ -179,3 +247,5 @@ namespace LogAnalizerWpfClient
         }
     }
 }
+
+

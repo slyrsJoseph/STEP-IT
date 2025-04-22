@@ -49,6 +49,8 @@ namespace LogAnalizerWpfClient
 
                 try
                 {
+                    ShowLoading();
+                    
                     await _logApiClient.ImportLogsAsync(filePath, selectedWeek);
 
                     // Добавляем в список импортированных
@@ -76,6 +78,10 @@ namespace LogAnalizerWpfClient
                     MessageBox.Show($"Ошибка при импорте файла: {ex.Message}", "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                 finally
+                {
+                    HideLoading();
+                }
             }
         }
         private void RefreshLogList()
@@ -87,6 +93,19 @@ namespace LogAnalizerWpfClient
             }
         }
          
+        
+        private void ShowLoading()
+        {
+            LoadingOverlay.Visibility = Visibility.Visible;
+        }
+
+        private void HideLoading()
+        {
+            LoadingOverlay.Visibility = Visibility.Collapsed;
+        }
+
+      
+        
         private void btnResetLogs_Click(object sender, RoutedEventArgs e)
         {
             importedLogs.Clear(); 
@@ -177,6 +196,14 @@ namespace LogAnalizerWpfClient
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+        
+        private void MaximizeRestore_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal)
+                WindowState = WindowState.Maximized;
+            else
+                WindowState = WindowState.Normal;
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
