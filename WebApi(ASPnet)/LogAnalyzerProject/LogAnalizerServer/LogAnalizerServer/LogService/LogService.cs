@@ -25,87 +25,7 @@ namespace LogAnalizerServer
             _logger = logger;
         }
         
-       
-
-
-/*public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
-{
-    // ✅ Удаляем старые записи для выбранной недели
-    var deletedCount = await _context.AlarmLogs
-        .Where(log => log.WeekType == weekType)
-        .BatchDeleteAsync();
-
-    _logger.LogInformation($"Удалено {deletedCount} записей по неделе {weekType} перед импортом.");
-
-    using var stream = File.OpenRead(filePath);
-    using var reader = new StreamReader(stream);
-
-    string headerLine = await reader.ReadLineAsync();
-    if (headerLine == null)
-    {
-        _logger.LogWarning("ImportLogsAsync: файл пустой.");
-        return;
-    }
-
-    int lineNumber = 1;
-    string line;
-    var logsToAdd = new List<AlarmLog>();
-
-    while ((line = await reader.ReadLineAsync()) != null)
-    {
-        lineNumber++;
-        if (string.IsNullOrWhiteSpace(line))
-            continue;
-
-        string[] fields = ParseCsvLine(line);
-        if (fields.Length != 15)
-        {
-            _logger.LogWarning($"Line {lineNumber} has unexpected format");
-            continue;
-        }
-
-        try
-        {
-            var alarmLog = new AlarmLog
-            {
-                TimeWhenLogged = DateTime.Parse(fields[0]),
-                LocalZoneTime = DateTime.Parse(fields[1]),
-                SequenceNumber = long.Parse(fields[2]),
-                AlarmId = fields[3],
-                AlarmClass = fields[4],
-                Resource = fields[5],
-                LoggedBy = fields[6],
-                Reference = fields[7],
-                PrevState = fields[8],
-                LogAction = fields[9],
-                FinalState = fields[10],
-                AlarmMessage = fields[11],
-                GenerationTime = DateTime.Parse(fields[12]),
-                GenerationTimeUtc = DateTime.Parse(fields[13]),
-                Project = fields[14],
-                WeekType = weekType
-            };
-
-            logsToAdd.Add(alarmLog);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning($"Line {lineNumber} has invalid data: {ex.Message}");
-        }
-    }
-
-    if (logsToAdd.Any())
-    {
-        await _context.BulkInsertAsync(logsToAdd);
-        _logger.LogInformation($"ImportLogsAsync: Импортировано {logsToAdd.Count} логов через BulkInsert.");
         
-        await _context.Database.ExecuteSqlRawAsync("VACUUM;");
-    }
-    else
-    {
-        _logger.LogWarning("ImportLogsAsync: Нет корректных логов для сохранения.");
-    }
-}*/
 
 public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
 {
@@ -115,7 +35,7 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
     string headerLine = await reader.ReadLineAsync();
     if (headerLine == null)
     {
-        _logger.LogWarning("ImportLogsAsync: файл пустой.");
+        _logger.LogWarning("ImportLogsAsync: file is empty.");
         return;
     }
 
@@ -168,20 +88,20 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
 
     if (logsToAdd.Any())
     {
-        // ✅ Быстрое массовое удаление всех записей по неделе
+        
         await _context.AlarmLogs
             .Where(log => log.WeekType == weekType)
             .BatchDeleteAsync();
 
-        _logger.LogInformation($"Удалены старые логи по неделе {weekType}");
+        _logger.LogInformation($"Deleted old olgs from week {weekType}");
 
         // ✅ Массовая вставка новых логов
         await _context.BulkInsertAsync(logsToAdd);
-        _logger.LogInformation($"Импортировано {logsToAdd.Count} логов через BulkInsert.");
+        _logger.LogInformation($"Imported {logsToAdd.Count} logs from BulkInsert.");
     }
     else
     {
-        _logger.LogWarning("ImportLogsAsync: Нет корректных логов для сохранения.");
+        _logger.LogWarning("ImportLogsAsync: No correct logs for compare.");
     }
 }
 
@@ -198,33 +118,33 @@ public async Task ImportLogsAsync(string filePath, LogWeekType weekType)
 
                 if (c == '\"')
                 {
-                    // Если встречаем кавычку:
+                    
                     if (inQuotes && i < line.Length - 1 && line[i + 1] == '\"')
                     {
-                        // Двойные кавычки внутри цитаты -> добавляем одну кавычку в значение
+                        
                         field.Append('\"');
-                        i++; // пропустить экранирующую кавычку
+                        i++; 
                     }
                     else
                     {
-                        // Переключаем состояние "внутри кавычек"
+                        
                         inQuotes = !inQuotes;
                     }
                 }
                 else if (c == ',' && !inQuotes)
                 {
-                    // Разделитель поля (запятая вне кавычек)
+                    
                     fields.Add(field.ToString().Trim());
                     field.Clear();
                 }
                 else
                 {
-                    // Обычный символ
+                   
                     field.Append(c);
                 }
             }
 
-            // Добавить последнее поле (после последней запятой или конец строки)
+           
             fields.Add(field.ToString().Trim());
             return fields.ToArray();
         }

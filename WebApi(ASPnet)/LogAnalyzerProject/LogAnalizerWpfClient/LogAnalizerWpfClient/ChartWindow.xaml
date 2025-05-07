@@ -50,7 +50,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!-- Custom Title Bar -->
+            
             <DockPanel Grid.Row="0" Background="#1A1A1A" MouseDown="TitleBar_MouseDown">
                 <TextBlock Text="⚡ Chart View" Foreground="#00FFFF" FontWeight="Bold" FontSize="14"
                            VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -70,7 +70,7 @@
                 </StackPanel>
             </DockPanel>
 
-            <!-- Top Controls -->
+            
             <StackPanel Orientation="Vertical" Margin="10" Grid.Row="1">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Report Type:" Foreground="#00FFFF" VerticalAlignment="Center" Margin="0,0,5,0" />
@@ -96,7 +96,7 @@
             </StackPanel>
 
 
-            <!-- Chart -->
+            
           
             <lvc:CartesianChart x:Name="chart"
                                 Grid.Row="2"

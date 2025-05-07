@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\App.xaml
-4-1237450329
+8822292531
 
-81664288004
+131678874037
 209-803033227
-ChartWindow.xaml;MainWindow.xaml;SplashWindow.xaml;TableViewWindow.xaml;
+ChartDateTimeComparisonWindow.xaml;ChartWindow.xaml;DataBaseManagerWindow.xaml;DateTimeComparisonWindow.xaml;MainWindow.xaml;SplashWindow.xaml;TableDateTimeComparisonWindow.xaml;WeekByWeekComparisonWindow.xaml;
 
 False
 

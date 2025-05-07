@@ -11,8 +11,6 @@ public class LogAnalizerServerDbContext : DbContext
      {
      }
     public DbSet<AlarmLog> AlarmLogs { get; set; } = null!;
-    /*public DbSet<AlarmLog> CurrentWeekLogs { get; set; } = null!;
-    public DbSet<AlarmLog> PreviousWeekLogs { get; set; } = null!;*/
     public DbSet<ComparisonResult> ComparisonResults { get; set; } = null!;
     
   
@@ -52,4 +50,12 @@ public class LogAnalizerServerDbContext : DbContext
         });
         
     }
+    
+    
+  
+    
+  
+    
+    
+    
 }

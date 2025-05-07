@@ -43,5 +43,13 @@ C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\D
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\ChartWindow.g.cs
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\SplashWindow.baml
 C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\SplashWindow.g.cs
-C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\TableViewWindow.baml
-C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\TableViewWindow.g.cs
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\DataBaseManagerWindow.baml
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\DataBaseManagerWindow.g.cs
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\DateTimeComparisonWindow.baml
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\DateTimeComparisonWindow.g.cs
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\ChartDateTimeComparisonWindow.baml
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\ChartDateTimeComparisonWindow.g.cs
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\WeekByWeekComparisonWindow.g.cs
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\WeekByWeekComparisonWindow.baml
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\TableDateTimeComparisonWindow.baml
+C:\Users\JosephOne\RiderProjects\LogAnalizerWpfClient\LogAnalizerWpfClient\obj\Debug\net8.0-windows\TableDateTimeComparisonWindow.g.cs

@@ -50,7 +50,8 @@ namespace LogAnalizerServer.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime>("GenerationTime")
+                    b.Property<DateTime?>("GenerationTime")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("GenerationTimeUtc")

@@ -25,8 +25,14 @@ namespace LogAnalizerWpfClient
         private readonly List<ComparisonResult> _results;
         private readonly LogWeekType _week1;
         private readonly LogWeekType _week2;
+        
+        
+        
+       
+        
+        
 
-        public ChartWindow(LogApiClient logApiClient, List<ComparisonResult> results, LogWeekType week1, LogWeekType week2)
+        public ChartWindow(LogApiClient logApiClient, List<ComparisonResult> results, LogWeekType? week1, LogWeekType? week2)
         {
             InitializeComponent();
             
@@ -35,20 +41,35 @@ namespace LogAnalizerWpfClient
             this.Title = $"Comparison: {week1} vs {week2}";
 
             _results = results;
-            _week1 = week1;
-            _week2 = week2;
+
+            if (week1.HasValue && week2.HasValue)
+            {
+                _week1 = week1.Value;
+                _week2 = week2.Value;
+                this.Title = $"Comparison: {week1.Value} vs {week2.Value}";
+            }
+            else
+            {
+                this.Title = "Comparison by Date Range";
+            }
+            
 
             comboReportType.ItemsSource = new List<string> { "Equipment Alarms" };
             comboReportType.SelectedIndex = 0;
 
             comboCategory.ItemsSource = new List<string>
-                { "VPH", "BRC", "LGA", "HRN", "DDM", "DW", "TFM", "ELT", "PDPH" };
+               
+               { "VPH", "BRC", "LGA", "HRN", "DDM", "DW","DW VFD", "DW ZPS", "DW ECS" ,"TFM", "ELT", "PDPH" };
             comboCategory.SelectedIndex = -1;
             
             
             
             
         }
+        
+        
+     
+        
         
         
         private void comboReportType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -108,12 +129,7 @@ namespace LogAnalizerWpfClient
 
       private void BuildChart(List<ComparisonResult> filteredResults)
         {
-            /*var labels = filteredResults.Select(r => r.AlarmMessage).ToArray();
             
-         
-            
-            var valuesWeek1 = filteredResults.Select(r => (double)r.CountWeek1).ToArray();
-            var valuesWeek2 = filteredResults.Select(r => (double)r.CountWeek2).ToArray();*/
             
             var labels = new List<string>();
             var valuesWeek1 = new List<double>();
@@ -121,24 +137,22 @@ namespace LogAnalizerWpfClient
 
             foreach (var result in filteredResults)
             {
-                // добавляем реальные данные
+               
                 labels.Add(result.AlarmMessage);
                 valuesWeek1.Add(result.CountWeek1);
                 valuesWeek2.Add(result.CountWeek2);
 
-                // добавляем пустую "группу"
-                labels.Add(""); // пустой label
-                valuesWeek1.Add(double.NaN); // нулевые значения
+              
+                labels.Add(""); 
+                valuesWeek1.Add(double.NaN); 
                 valuesWeek2.Add(double.NaN);
                 
-                labels.Add(""); // пустой label
-                valuesWeek1.Add(double.NaN); // нулевые значения
+                labels.Add(""); 
+                valuesWeek1.Add(double.NaN); 
                 valuesWeek2.Add(double.NaN);
                 
                 
-                /*labels.Add(""); // пустой label
-                valuesWeek1.Add(double.NaN); // нулевые значения
-                valuesWeek2.Add(double.NaN);*/
+               
                 
                 
             }
@@ -217,8 +231,7 @@ namespace LogAnalizerWpfClient
             {
                 var filePath = dialog.FileName;
                 using var stream = new FileStream(filePath, FileMode.Create);
-               // var image = chart.AsBitmap(new SKSize(1200, 800));
-              //  image.Encode(stream, SKEncodedImageFormat.Png, 100);
+              
                 MessageBox.Show($"Chart saved to {filePath}", "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
